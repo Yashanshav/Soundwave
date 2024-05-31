@@ -23,3 +23,16 @@ export const links = [
   { name: 'Top Artists', to: '/top-artists', icon: HiOutlineUserGroup },
   { name: 'Top Charts', to: '/top-charts', icon: HiOutlineHashtag },
 ];
+
+export const data = [
+  {title: 'Song 1', key: 1},
+  {title: 'Song 2', key: 2},
+  {title: 'Song 3', key: 3},
+  {title: 'Song 4', key: 4},
+  {title: 'Song 5', key: 5},
+  {title: 'Song 6', key: 6},
+  {title: 'Song 7', key: 7},
+  {title: 'Song 8', key: 8},
+  {title: 'Song 9', key: 9},
+  {title: 'Song 10', key: 10},
+]

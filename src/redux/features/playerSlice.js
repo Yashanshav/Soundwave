@@ -16,16 +16,29 @@ const playerSlice = createSlice({
     setActiveSong: (state, action) => {
       state.activeSong = action.payload.song;
 
-      if (action.payload?.data?.tracks?.hits) {
-        state.currentSongs = action.payload.data.tracks.hits;
-      } else if (action.payload?.data?.properties) {
-        state.currentSongs = action.payload?.data?.tracks;
-      } else {
-        state.currentSongs = action.payload.data;
-      }
+      console.log(action.payload);
+
+      if (action.payload?.data?.tracks?.items) {
+        state.currentSongs = action.payload.data.tracks.items;
+      } 
+      // else if (action.payload?.data?.properties) {
+      //   state.currentSongs = action.payload?.data?.tracks;
+      // } else {
+      //   state.currentSongs = action.payload.data;
+      // }
 
       state.currentIndex = action.payload.i;
       state.isActive = true;
+      const currState = {
+        currentSongs: state.currentSongs,
+        currentIndex: state.currentIndex,
+        isActive: state.isActive,
+        isPlaying: state.isPlaying,
+        activeSong: state.activeSong,
+        genreListId: state.genreListId,
+        inside: "setActiveSong"
+      }
+      console.log(currState);
     },
 
     nextSong: (state, action) => {
@@ -52,6 +65,16 @@ const playerSlice = createSlice({
 
     playPause: (state, action) => {
       state.isPlaying = action.payload;
+      const currState = {
+        currentSongs: state.currentSongs,
+        currentIndex: state.currentIndex,
+        isActive: state.isActive,
+        isPlaying: state.isPlaying,
+        activeSong: state.activeSong,
+        genreListId: state.genreListId,
+        inside: "playPause"
+      }
+      console.log(currState);
     },
 
     selectGenreListId: (state, action) => {

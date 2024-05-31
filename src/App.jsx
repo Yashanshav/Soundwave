@@ -1,13 +1,54 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
+import { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, SCOPE_URL_PARAM, SPOTIFY_ENDPOINT } from "../src/redux/features/auth";
 
-import { Searchbar, Sidebar, MusicPlayer, TopPlay } from './components';
+import { Searchbar, Sidebar, MusicPlayer, TopPlay, Loader, Error } from './components';
 import { ArtistDetails, TopArtists, AroundYou, Discover, Search, SongDetails, TopCharts } from './pages';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useGetTopChartsQuery } from './redux/services/spotifyApi';
 
 const App = () => {
   const { activeSong } = useSelector((state) => state.player);
+  const [token, setToken] = useState("");
+
+  const getAccessToken = async () => {
+    const hash = window.location.hash;
+    if(hash) {
+      const urlParams = new URLSearchParams(hash.slice(1));
+      const accessToken = urlParams.get("access_token");
+      setToken(accessToken);
+      console.log(token);
+      localStorage.setItem("access_token", accessToken);
+
+      window.history.pushState({}, null, '/');
+    }
+
+  }
+
+  useEffect(() => {
+    const accessToken = localStorage.getItem("access_token");
+    console.log(accessToken);
+    if(accessToken) {
+      setToken((prev) => prev = accessToken);
+      console.log(accessToken);
+      return;
+    }
+    getAccessToken();
+    
+  }, [token]);
+
+  const clickHandler = () => {
+    window.location.href = `${SPOTIFY_ENDPOINT}?client_id=${CLIENT_ID}&cliend_secret=${CLIENT_SECRET}&redirect_uri=${REDIRECT_URI}&scope=${SCOPE_URL_PARAM}&response_type=token&show_dialog=true`;
+  };
 
   return (
+    <>
+    {
+      !token ? (
+        <button onClick={clickHandler}>Give Spotify permission first</button>
+      ): null
+    }
     <div className="relative flex">
       <Sidebar />
       <div className="flex-1 flex flex-col bg-gradient-to-br from-black to-[#121286]">
@@ -31,12 +72,13 @@ const App = () => {
         </div>
       </div>
 
-      {activeSong?.title && (
+      {activeSong?.name && (
         <div className="absolute h-28 bottom-0 left-0 right-0 flex animate-slideup bg-gradient-to-br from-white/10 to-[#2a2a80] backdrop-blur-lg rounded-t-3xl z-10">
           <MusicPlayer />
         </div>
       )}
     </div>
+    </>
   );
 };
 
